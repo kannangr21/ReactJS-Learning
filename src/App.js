@@ -1,24 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import NavBar from './NavBar';
+import Home from './Home';
+import Enter from './EnterItem';
+import useFetch from './UseFetch';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import DisplayTask from './ShowTask';
 
 function App() {
+  const {data: list, loading, err} = useFetch('http://localhost:8000/tasks')
+  
   return (
+    <Router>
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <NavBar />
+      <div className="content">
+       <Routes > 
+          <Route path='/' element={
+            loading ?  <div>Loading...</div>
+            :  <Home list={list} />
+          } />
+              
+        <Route path='/create' element={<Enter />}/>
+
+        <Route path='/task/:id' element={<DisplayTask />}/>
+           
+        </Routes>
+      
+      </div>
     </div>
+    </Router>
   );
 }
 
